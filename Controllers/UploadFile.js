@@ -20,11 +20,21 @@ const userDp = async (req, res) => {
 
     // ✅ Avatar upload
     if (avatarFile) {
-      const avatarResult = await uploadBufferToCloudinary(avatarFile.buffer, {
-        folder: `avatar/${email.split("@")[0]}`,
-        public_id: userId,
-        overwrite: true,
-        resource_type: "image",
+      const avatarResult = await new Promise((resolve, reject) => {
+        cloudinary.uploader
+          .upload_stream(
+            {
+              folder: `avatar/${email.split("@")[0]}`,
+              public_id: userId,
+              overwrite: true,
+              resource_type: "image", // or "auto"
+            },
+            (error, result) => {
+              if (error) reject(error);
+              else resolve(result);
+            }
+          )
+          .end(avatarFile.buffer); // ✅ multer buffer
       });
 
       user.dp = avatarResult.secure_url;
@@ -32,15 +42,22 @@ const userDp = async (req, res) => {
 
     // ✅ Background upload
     if (backgroundFile) {
-      const backgroundResult = await uploadBufferToCloudinary(
-        backgroundFile.buffer,
-        {
-          folder: `background/${email.split("@")[0]}`,
-          public_id: userId,
-          overwrite: true,
-          resource_type: "image",
-        }
-      );
+      const backgroundResult = await new Promise((resolve, reject) => {
+        cloudinary.uploader
+          .upload_stream(
+            {
+              folder: `background/${email.split("@")[0]}`,
+              public_id: userId,
+              overwrite: true,
+              resource_type: "image",
+            },
+            (error, result) => {
+              if (error) reject(error);
+              else resolve(result);
+            }
+          )
+          .end(backgroundFile.buffer); // ✅ multer buffer
+      });
 
       user.backgroundImg = backgroundResult.secure_url;
     }
