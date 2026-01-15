@@ -3,7 +3,7 @@ const cloudinary = require("../config/cloudinary");
 
 const userDp = async (req, res) => {
   const { name, email, userId } = req.body;
-  const avatarFile = req.files?.avatar?.[0]; // multer array of files
+  const avatarFile = req.files?.avatar?.[0];
   const backgroundFile = req.files?.background?.[0];
 
   if (!avatarFile && !backgroundFile && !name) {
@@ -18,39 +18,33 @@ const userDp = async (req, res) => {
         .json({ message: "User not found", success: false });
     }
 
-    // Upload avatar
+    // ✅ Avatar upload
     if (avatarFile) {
-      const avatarResult = await cloudinary.uploader.upload_stream(
-        {
-          folder: `avatar/${email.split("@")[0]}`,
-          public_id: userId,
-          overwrite: true,
-        },
-        async (error, result) => {
-          if (error) throw error;
-          user.dp = result.secure_url;
-        }
-      );
-      avatarResult.end(avatarFile.buffer);
+      const avatarResult = await uploadBufferToCloudinary(avatarFile.buffer, {
+        folder: `avatar/${email.split("@")[0]}`,
+        public_id: userId,
+        overwrite: true,
+        resource_type: "image",
+      });
+
+      user.dp = avatarResult.secure_url;
     }
 
-    // Upload background
+    // ✅ Background upload
     if (backgroundFile) {
-      const backgroundResult = await cloudinary.uploader.upload_stream(
+      const backgroundResult = await uploadBufferToCloudinary(
+        backgroundFile.buffer,
         {
           folder: `background/${email.split("@")[0]}`,
           public_id: userId,
           overwrite: true,
-        },
-        async (error, result) => {
-          if (error) throw error;
-          user.backgroundImg = result.secure_url;
+          resource_type: "image",
         }
       );
-      backgroundResult.end(backgroundFile.buffer);
+
+      user.backgroundImg = backgroundResult.secure_url;
     }
 
-    // Update name
     if (name) user.name = name;
 
     await user.save();
