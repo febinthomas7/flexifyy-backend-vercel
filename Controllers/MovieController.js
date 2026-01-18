@@ -59,6 +59,21 @@ const movies = (req, res) => {
       console.error(error);
     });
 };
+const singleMovie = (req, res) => {
+  const options = {
+    method: "GET",
+    url: `https://api.themoviedb.org/3/movie/${req.query.id}?language=en-US&api_key=${api_key}`,
+  };
+
+  axios
+    .request(options)
+    .then((response) => {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+};
 
 const trending = (req, res) => {
   const options = {
@@ -100,6 +115,22 @@ const series = (req, res) => {
     }&with_original_language=${req.query.lang || "en"}&with_origin_country=${
       req.query.country || "US"
     }&page=${req.query.page || "1"}&sort_by=popularity.desc&api_key=${api_key}`,
+  };
+
+  axios
+    .request(options)
+    .then((response) => {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+};
+
+const singleSeries = (req, res) => {
+  const options = {
+    method: "GET",
+    url: `https://api.themoviedb.org/3/tv/${req.query.id}?language=en-US&api_key=${api_key}`,
   };
 
   axios
@@ -351,4 +382,6 @@ module.exports = {
   actors,
   animeEpisodes,
   searchAnime,
+  singleMovie,
+  singleSeries,
 };

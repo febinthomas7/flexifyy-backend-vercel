@@ -20,6 +20,8 @@ const {
   animeEpisodes,
   TrendingAnime,
   searchAnime,
+  singleMovie,
+  singleSeries,
 } = require("../Controllers/MovieController");
 
 router.get("/search", search);
@@ -28,6 +30,8 @@ router.get("/movies", movies);
 
 router.get("/anime", anime);
 router.get("/trending", trending);
+router.get("/single/movie", singleMovie);
+router.get("/single/series", singleSeries);
 
 router.get("/trendinganime", TrendingAnime);
 
