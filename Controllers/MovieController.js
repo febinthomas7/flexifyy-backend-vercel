@@ -302,7 +302,7 @@ const download = async (req, res) => {
     const firstData = firstResponse.data?.imdb_id;
 
     const secondResponse = await axios.request(
-      `https://yts.mx/api/v2/movie_details.json?imdb_id=${firstData}`
+      `https://yts.bz/api/v2/movie_details.json?imdb_id=${firstData}`,
     );
     const secondData = secondResponse.data.data.movie?.torrents;
     res.json(secondData);
