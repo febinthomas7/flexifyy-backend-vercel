@@ -20,7 +20,6 @@ async function connectDB() {
   }
 
   cached.conn = await cached.promise;
-  console.log("MongoDB connected");
   return cached.conn;
 }
 
