@@ -143,6 +143,21 @@ const singleSeries = (req, res) => {
     });
 };
 
+const seasonEpisodes = (req, res) => {
+  const options = {
+    method: "GET",
+    url: `https://api.themoviedb.org/3/tv/${req.query.id}/season/${req.query.season}?language=en-US&api_key=${api_key}`,
+  };
+
+  axios
+    .request(options)
+    .then((response) => {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.error("error");
+    });
+};
 const anime = (req, res) => {
   const options = {
     method: "GET",
@@ -384,4 +399,5 @@ module.exports = {
   searchAnime,
   singleMovie,
   singleSeries,
+  seasonEpisodes,
 };
